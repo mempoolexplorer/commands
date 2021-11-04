@@ -1,0 +1,45 @@
+version: '3'
+services:
+
+  #------------------------------------------------------------------------------
+  bitcoind_adapter1:
+    image: ${REGISTRY_HOST}/bitcoind_adapter:latest
+    container_name: bitcoind_adapter1
+    #    ports:
+    #      - "8080:8080"
+    #      - "8081:8081"
+    environment:
+      spring.profiles.active: "prod,mainNet"
+      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000"
+      spring.cloud.config.enabled: "true"
+      spring.cloud.config.fail-fast: "true"
+      spring.cloud.config.uri: http://${CONFIGURATION_SERVER_IP_ADDRESS}:${CONFIGURATION_SERVER_PORT}
+      eureka.client.serviceUrl.defaultZone: http://${SERVICE_DISCOVERY_IP_ADDRESS}:${SERVICE_DISCOVERY_PORT}/eureka/
+      bitcoind.host: ${BITCOIND_HOST_IP_ADDRESS}
+      bitcoind.zmqPort: ${BITCOIND_ZMQ_PORT}
+      management.server.port: ${COMMON_MANAGEMENT_PORT}
+      #bitcoind.rpcPort: ${BITCOIND_RPC_PORT}#Depends on Spring profile
+      server.port: ${BITCOIND_1_ADAPTER_PORT}
+      spring.cloud.stream.kafka.binder.zkNodes: ${ZOOKEEPER_IP_ADDRESS}
+      spring.cloud.stream.kafka.binder.brokers: ${KAFKA1_IP_ADDRESS}
+      spring.cloud.stream.bindings.txMemPoolEvents.destination: ${TOPIC_MEMPOOL_TX_EVENTS1}
+    networks:
+      bitnet:
+        ipv4_address: ${BITCOIND_1_ADAPTER_IP_ADDRESS}
+    restart: always
+#    depends_on:
+#     - configuration_server
+#     - service_discovery
+    volumes:
+      - bitcoind_adapter1_volume:/tmp
+
+volumes:
+  bitcoind_adapter1_volume:
+
+networks:
+  bitnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+#        - gateway: 172.18.0.1

@@ -1,0 +1,26 @@
+version: "3"
+services:
+  #------------------------------------------------------------------------------
+  tx_mempool_mongo2:
+    image: mongo:latest
+    container_name: tx_mempool_mongo2
+    ##    ports:
+    ##      - "27017:27017"
+    networks:
+      bitnet:
+        ipv4_address: ${TX_MEMPOOL_MONGO2_IP_ADDRESS}
+    volumes:
+      - tx_mempool_mongo_volume2:/data/db
+
+#------------------------------------------------------------------------------
+volumes:
+  tx_mempool_mongo_volume2:
+
+#------------------------------------------------------------------------------
+networks:
+  bitnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+#        - gateway: 172.18.0.1

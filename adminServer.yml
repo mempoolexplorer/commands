@@ -1,0 +1,30 @@
+version: '3'
+services:
+
+  #------------------------------------------------------------------------------
+  admin_server:
+    image: ${REGISTRY_HOST}/admin_server:latest
+    container_name: admin_server
+    #    ports:
+    #      - "8888:8888"
+    environment:
+      server.port: ${ADMIN_SERVER_PORT}
+      eureka.client.serviceUrl.defaultZone: http://${SERVICE_DISCOVERY_IP_ADDRESS}:${SERVICE_DISCOVERY_PORT}/eureka/
+    networks:
+      bitnet:
+        ipv4_address: ${ADMIN_SERVER_IP_ADDRESS}
+    volumes:
+      - admin_server_volume:/tmp
+
+#------------------------------------------------------------------------------
+volumes:
+  admin_server_volume:
+
+#------------------------------------------------------------------------------
+networks:
+  bitnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+#        - gateway: 172.18.0.1

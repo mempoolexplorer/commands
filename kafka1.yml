@@ -1,0 +1,48 @@
+version: '3'
+services:
+  #------------------------------------------------------------------------------
+  kafka1:
+    image: wurstmeister/kafka
+    container_name: kafka1
+    #    ports:
+    #    - "9092:9092"
+    environment:
+      BROKER_ID: 0
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:${ZOOKEEPER_PORT}
+      KAFKA_LOG_DIRS: /tmp/kafka-logs
+      KAFKA_LISTENERS: PLAINTEXT://${KAFKA1_IP_ADDRESS}:${KAFKA1_PORT}
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_CREATE_TOPICS: ${TOPIC_MEMPOOL_TX_EVENTS1}:1:1,${TOPIC_MEMPOOL_TX_EVENTS2}:1:1
+      KAFKA_MESSAGE_MAX_BYTES: 4000000
+      KAFKA_LOG_RETENTION_MS: 1000
+      KAFKA_LOG_RETENTION_BYTES: 10000000
+      KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: 10000
+    #fetch.message.max.bytes
+    #replica.fetch.max.bytes
+    #max.message.bytes
+    #message.max.bytes
+
+    networks:
+      bitnet:
+        ipv4_address: ${KAFKA1_IP_ADDRESS}
+# No necesitamos volumen porque no guardamos ningun dato.
+# Ademas asi no da error al chequear que la instancia de zookeeper es la misma        
+#    volumes:
+#      - kafka_data_volume1:/tmp/kafka-logs
+    #      - /var/run/docker.sock:/var/run/docker.sock # Esto no deberia ponerse,
+    #    depends_on:
+    #  - zookeeper
+
+
+#------------------------------------------------------------------------------
+#volumes:
+#  kafka_data_volume1:
+
+#------------------------------------------------------------------------------
+networks:
+  bitnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+#        - gateway: 172.18.0.1

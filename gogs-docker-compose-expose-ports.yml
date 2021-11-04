@@ -1,0 +1,41 @@
+version: '3'
+services:
+    postgres:
+      image: postgres:9.5
+      restart: always
+      environment:
+        POSTGRES_USER: "anon"
+        POSTGRES_PASSWORD: "anon"
+        POSTGRES_DB: "gogs"
+      volumes:
+       - "~/.gogs/sqldata:/var/lib/postgresql/data"
+      networks:
+        bitnet:
+          ipv4_address: 172.18.0.16
+    gogs:
+      image: gogs/gogs:latest
+      restart: always
+      ports:
+       - "10022:22"
+       - "3000:3000"
+      links:
+       - postgres
+      environment:
+        RUN_CROND: "true"
+      networks:
+        bitnet:
+          ipv4_address: 172.18.0.17
+      volumes:
+       - "~/.gogs/data:/data"
+      depends_on:
+       - postgres
+
+networks:
+  bitnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet:  172.18.0.0/16
+#        - gateway: 172.18.0.1
+
+

@@ -1,0 +1,44 @@
+version: '3'
+services:
+  #------------------------------------------------------------------------------
+  gateway_service:
+    image: ${REGISTRY_HOST}/gateway_service:latest
+    container_name: gateway_service
+    ports:
+        - "4445:8443"
+    environment:
+      spring.cloud.config.enabled: "true"
+      spring.cloud.config.fail-fast: "true"
+      spring_cloud_config_uri: http://${CONFIGURATION_SERVER_IP_ADDRESS}:${CONFIGURATION_SERVER_PORT}
+      management.server.port: ${COMMON_MANAGEMENT_PORT}
+      server.ssl.enabled: "true"
+      server.ssl.key-alias: 1
+      server.ssl.key-store-password: ${SERVER_SSL_KEY_STORE_PASSWORD}
+      server.ssl.key-store: file:/ssl/gateway.p12
+      server.ssl.key-store-type: pkcs12
+    networks:
+      bitnet:
+        ipv4_address: ${GATEWAY_SERVICE_IP_ADDRESS}
+    restart: always
+    #TODO: Maybe needed
+    #    depends_on:
+    #      - configuration_server
+    #      - service_discovery
+    #      - bitcoind_adapter1
+    #      - tx_mempool1
+    volumes:
+      - ~/.rsassl:/ssl
+      - gateway_service_volume:/tmp
+
+#------------------------------------------------------------------------------
+volumes:
+  gateway_service_volume:
+
+#------------------------------------------------------------------------------
+networks:
+  bitnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+#        - gateway: 172.18.0.1

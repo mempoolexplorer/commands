@@ -1,0 +1,27 @@
+version: '3'
+services:
+  #------------------------------------------------------------------------------
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    #    ports:
+    #    - "2181:2181"
+    networks:
+      bitnet:
+        ipv4_address: ${ZOOKEEPER_IP_ADDRESS}
+#    volumes:
+#      - zookeeper_data_volume1:/var/lib/zookeeper/data
+#      - zookeeper_log_1:/var/lib/zookeeper/log
+#------------------------------------------------------------------------------
+networks:
+  bitnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+#        - gateway: 172.18.0.1
+
+#------------------------------------------------------------------------------
+#volumes:
+#  zookeeper_data_volume1:
+#  zookeeper_log_1:

@@ -1,0 +1,31 @@
+version: '3'
+services:
+
+  #------------------------------------------------------------------------------
+  configuration_server:
+    image: ${REGISTRY_HOST}/configuration_server:latest
+    container_name: configuration_server
+    #    ports:
+    #      - "8888:8888"
+    environment:
+      server.port: ${CONFIGURATION_SERVER_PORT}
+      management.server.port: ${COMMON_MANAGEMENT_PORT}
+    networks:
+      bitnet:
+        ipv4_address: ${CONFIGURATION_SERVER_IP_ADDRESS}
+    volumes:
+      - configuration_server_volume:/tmp
+
+
+#------------------------------------------------------------------------------
+volumes:
+  configuration_server_volume:
+
+#------------------------------------------------------------------------------
+networks:
+  bitnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+#        - gateway: 172.18.0.1

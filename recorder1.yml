@@ -1,0 +1,41 @@
+version: "3"
+services:
+
+  #------------------------------------------------------------------------------
+  mempool_recorder1:
+    image: ${REGISTRY_HOST}/mempool_recorder:latest
+    container_name: mempool_recorder1
+    environment:
+      spring.profiles.active: "prod"
+      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000"
+      spring.cloud.config.enabled: "true"
+      spring.cloud.config.fail-fast: "true"
+      spring_cloud_config_uri: http://${CONFIGURATION_SERVER_IP_ADDRESS}:${CONFIGURATION_SERVER_PORT}
+      eureka.client.serviceUrl.defaultZone: http://${SERVICE_DISCOVERY_IP_ADDRESS}:${SERVICE_DISCOVERY_PORT}/eureka/
+      spring.data.mongodb.uri: mongodb://${MEMPOOL_RECORDER_MONGO1_IP_ADDRESS}:${MEMPOOL_RECORDER_MONGO1_PORT}/stateOnBlock
+      #logging.level.org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+      #logging.level.org.springframework.data.mongodb.core.ReactiveMongoTemplate: DEBUG
+      management.server.port: ${COMMON_MANAGEMENT_PORT}
+      server.port: ${MEMPOOL_RECORDER1_PORT}
+      spring.cloud.stream.kafka.binder.zkNodes: ${ZOOKEEPER_IP_ADDRESS}
+      spring.cloud.stream.kafka.binder.brokers: ${KAFKA1_IP_ADDRESS}
+      spring.cloud.stream.bindings.txMemPoolEvents.destination: ${TOPIC_MEMPOOL_TX_EVENTS1}
+    networks:
+      bitnet:
+        ipv4_address: ${MEMPOOL_RECORDER1_IP_ADDRESSS}
+    restart: always
+    volumes:
+      - mempool_recorder1_volume:/tmp
+
+#------------------------------------------------------------------------------
+volumes:
+  mempool_recorder1_volume:
+
+#------------------------------------------------------------------------------
+networks:
+  bitnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+#        - gateway: 172.18.0.1

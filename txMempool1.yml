@@ -1,0 +1,52 @@
+version: "3"
+services:
+  #------------------------------------------------------------------------------
+  #port host:docker
+  tx_mempool1:
+    image: ${REGISTRY_HOST}/tx_mempool:latest
+    container_name: tx_mempool1
+    #ports:
+    #  - "4445:8080"
+    environment:
+      spring.profiles.active: "prod"
+      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000"
+      spring.cloud.config.enabled: "true"
+      spring.cloud.config.fail-fast: "true"
+      spring_cloud_config_uri: http://${CONFIGURATION_SERVER_IP_ADDRESS}:${CONFIGURATION_SERVER_PORT}
+      eureka.client.serviceUrl.defaultZone: http://${SERVICE_DISCOVERY_IP_ADDRESS}:${SERVICE_DISCOVERY_PORT}/eureka/
+      management.server.port: ${COMMON_MANAGEMENT_PORT}
+      server.port: ${TX_MEMPOOL1_PORT}
+      spring.cloud.stream.kafka.binder.zkNodes: ${ZOOKEEPER_IP_ADDRESS}
+      spring.cloud.stream.kafka.binder.brokers: ${KAFKA1_IP_ADDRESS}
+      spring.cloud.stream.bindings.txMemPoolEvents.destination: ${TOPIC_MEMPOOL_TX_EVENTS1}
+      spring.cloud.stream.bindings.txMemPoolEvents.group: txMemPool1
+      spring.data.mongodb.uri: mongodb://${TX_MEMPOOL_MONGO1_IP_ADDRESS}:${TX_MEMPOOL_MONGO1_PORT}/statistics
+      #server.ssl.key-store: file:/ssl/txmempool1.p12
+      #server.ssl.key-store-password: ${SERVER_SSL_KEY_STORE_PASSWORD}
+      #server.ssl.key-store-type: pkcs12
+      #server.ssl.key-alias: 1 
+    networks:
+      bitnet:
+        ipv4_address: ${TX_MEMPOOL1_IP_ADDRESSS}
+    restart: always
+    #    depends_on:
+    #      - configuration_server
+    #      - service_discovery
+    #TODO: Maybe needed
+    #      - bitcoind_adapter1
+    volumes:
+#      - ~/.rsassl:/ssl
+      - tx_mempool1_volume:/tmp
+
+#------------------------------------------------------------------------------
+volumes:
+  tx_mempool1_volume:
+
+#------------------------------------------------------------------------------
+networks:
+  bitnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+#        - gateway: 172.18.0.1

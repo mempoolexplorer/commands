@@ -1,0 +1,25 @@
+version: "3"
+services:
+  #------------------------------------------------------------------------------
+  mempool_recorder_mongo1:
+    image: mongo:latest
+    container_name: mempool_recorder_mongo1
+    ##    ports:
+    ##      - "27017:27017"
+    networks:
+      bitnet:
+        ipv4_address: ${MEMPOOL_RECORDER_MONGO1_IP_ADDRESS}
+    volumes:
+      - mempool_recorder_mongo_volume1:/data/db
+#------------------------------------------------------------------------------
+volumes:
+  mempool_recorder_mongo_volume1:
+
+#------------------------------------------------------------------------------
+networks:
+  bitnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+#        - gateway: 172.18.0.1

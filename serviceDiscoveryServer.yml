@@ -1,0 +1,28 @@
+version: '3'
+services:
+  #------------------------------------------------------------------------------
+  service_discovery:
+    image: ${REGISTRY_HOST}/service_discovery:latest
+    container_name: service_discovery
+    #    ports:
+    #      - "8761:8761"
+    networks:
+      bitnet:
+        ipv4_address: ${SERVICE_DISCOVERY_IP_ADDRESS}
+    volumes:
+      - service_discovery_volume:/tmp
+
+
+
+#------------------------------------------------------------------------------
+volumes:
+  service_discovery_volume:
+
+#------------------------------------------------------------------------------
+networks:
+  bitnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+#        - gateway: 172.18.0.1
