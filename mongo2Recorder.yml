@@ -11,6 +11,7 @@ services:
         ipv4_address: ${MEMPOOL_RECORDER_MONGO2_IP_ADDRESS}
     volumes:
       - mempool_recorder_mongo_volume2:/data/db
+    restart: always
 #------------------------------------------------------------------------------
 volumes:
   mempool_recorder_mongo_volume2:

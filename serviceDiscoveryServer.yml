@@ -11,6 +11,7 @@ services:
         ipv4_address: ${SERVICE_DISCOVERY_IP_ADDRESS}
     volumes:
       - service_discovery_volume:/tmp
+    restart: always
 
 
 

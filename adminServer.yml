@@ -15,6 +15,7 @@ services:
         ipv4_address: ${ADMIN_SERVER_IP_ADDRESS}
     volumes:
       - admin_server_volume:/tmp
+    restart: always
 
 #------------------------------------------------------------------------------
 volumes:
