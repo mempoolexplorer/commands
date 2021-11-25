@@ -4,8 +4,8 @@ services:
   mempool_recorder_mongo2:
     image: mongo:latest
     container_name: mempool_recorder_mongo2
-    ##    ports:
-    ##      - "27017:27017"
+    ports:
+      - "${MEMPOOL_RECORDER_MONGO2_EXP_PORT}:27017"
     networks:
       bitnet:
         ipv4_address: ${MEMPOOL_RECORDER_MONGO2_IP_ADDRESS}

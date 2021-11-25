@@ -4,8 +4,8 @@ services:
   tx_mempool_mongo2:
     image: mongo:latest
     container_name: tx_mempool_mongo2
-    ##    ports:
-    ##      - "27017:27017"
+    ports:
+      - "${TX_MEMPOOL_MONGO2_EXP_PORT}:27017"
     networks:
       bitnet:
         ipv4_address: ${TX_MEMPOOL_MONGO2_IP_ADDRESS}
