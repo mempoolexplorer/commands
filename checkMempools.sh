@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "bitcoind:" && \
-~/programas/bitcoin-0.21.0/bin/bitcoin-cli --rpcconnect=pc getmempoolinfo && \
+~/programas/bitcoin-22.0/bin/bitcoin-cli --rpcconnect=pc getmempoolinfo && \
 echo "" && echo "bitcoindAdapter1:" && curl http://bitcoindadapter1:8080/memPool/size && \
 #echo "" && echo "bitcoindAdapter2:" && curl http://bitcoindadapter2:8080/memPool/size && \
 echo "" && echo "txmempool1:" && curl http://txmempool1:8080/memPool/size && \
