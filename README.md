@@ -1,3 +1,5 @@
+# This is an abandoned project. 
+# See https://github.com/mempoolexplorer/mempool-explorer-back for a self-hosted version.
 # Commands folder
 
 This a utility commands folder.
